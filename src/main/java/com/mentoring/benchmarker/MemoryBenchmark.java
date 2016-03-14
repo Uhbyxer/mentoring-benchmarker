@@ -1,11 +1,18 @@
 package com.mentoring.benchmarker;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashBiMap;
@@ -19,7 +26,7 @@ import com.google.common.util.concurrent.AtomicLongMap;
 public class MemoryBenchmark {
 	public static long SIZE = 10000;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		System.out.println("List memory benchmarking:");
 		System.out.println("Capacity: " + SIZE);
 		
@@ -30,15 +37,15 @@ public class MemoryBenchmark {
 //		List<Integer> arrayList = new ArrayList<Integer>();
 //		listSizeBenchmark(arrayList);
 		
-//		Map<Integer, Integer> hashMap =  new HashMap<>();
-//		hashMapSizeBenchmark(hashMap);
+		Map<Integer, Integer> hashMap =  new HashMap<>();
+		hashMapSizeBenchmark(hashMap);
 
 
 //		Multiset<Integer> multiset = HashMultiset.create();
 //		multiSetSizeBenchmark(multiset);
 		
-		AtomicLongMap<Integer> atomicMap = AtomicLongMap.create();
-		atomicMapBenchmark(atomicMap);
+//		AtomicLongMap<Integer> atomicMap = AtomicLongMap.create();
+//		atomicMapBenchmark(atomicMap);
 		
 		
 //		
@@ -49,13 +56,30 @@ public class MemoryBenchmark {
 //		BiMap<Integer, Integer> biMap = HashBiMap.create();
 //		biMapSizeBenchmark(biMap);
 		
-		Table<Integer, Integer, Integer> table = HashBasedTable.create();
-		tableSizeBenchmark(table);
+//		Table<Integer, Integer, Integer> table = HashBasedTable.create();
+//		tableSizeBenchmark(table);
 		
-
+		
+		LoadingCache<Integer, Integer> loadingCache = 
+		         CacheBuilder.newBuilder()
+		            .maximumSize(SIZE * 2) // maximum 100 records can be cached
+		            .expireAfterAccess(30, TimeUnit.MINUTES) // cache will expire after 30 minutes of access
+		            .build(new CacheLoader<Integer, Integer>() { // build the cacheloader
+		            
+		               @Override
+		               public Integer load(Integer id) throws Exception {
+		                  //make the expensive call
+		                  return id;
+		               } 
+		            });
+		
+		loadingCacheSizeBenchmark(loadingCache);
+		
 		
 	}
 	
+
+
 	@Override
 	protected void finalize() throws Throwable {
 		System.err.println("gc works...");
@@ -173,5 +197,18 @@ public class MemoryBenchmark {
 		System.out.println("Used mem: " + (free - freeAfter));		
 	}
 	
+	private static void loadingCacheSizeBenchmark(LoadingCache<Integer, Integer> loadingCache) throws ExecutionException {
+		new MemoryBenchmark();
+		System.out.println("\nlistSizeBenchmark() -> " + loadingCache.getClass().getSimpleName());
+		long free = Runtime.getRuntime().freeMemory();
+		long freeAfter;
+		
+		for(int i = 0; i < SIZE; i++) {
+			loadingCache.get(i);
+		}
+		
+		freeAfter = Runtime.getRuntime().freeMemory();
+		System.out.println("Used mem: " + (free - freeAfter));			
+	}
 	
 }
