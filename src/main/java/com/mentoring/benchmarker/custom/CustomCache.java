@@ -7,11 +7,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ConcurrentHashMultiset;
 import com.google.common.collect.EvictingQueue;
 
 public class CustomCache<K, V> extends LinkedHashMap<K, V> {
@@ -95,6 +98,11 @@ public class CustomCache<K, V> extends LinkedHashMap<K, V> {
 //		System.out.println("linkedQueue: " + linkedQueue);		
 		
 		
+		
+		//ConcurrentHashMap<K, V>
+		//ConcurrentSkipListMap<K, V>
+		//Collections.synchronizedMap(m)
+		//ConcurrentHashMultiset
 		
 	}
 }
