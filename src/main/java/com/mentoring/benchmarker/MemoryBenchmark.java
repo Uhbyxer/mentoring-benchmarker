@@ -62,7 +62,7 @@ public class MemoryBenchmark {
 		
 		LoadingCache<Integer, Integer> loadingCache = 
 		         CacheBuilder.newBuilder()
-		            .maximumSize(SIZE * 2) // maximum 100 records can be cached
+		            .maximumSize(10) // maximum 100 records can be cached
 		            .expireAfterAccess(30, TimeUnit.MINUTES) // cache will expire after 30 minutes of access
 		            .build(new CacheLoader<Integer, Integer>() { // build the cacheloader
 		            
@@ -70,11 +70,17 @@ public class MemoryBenchmark {
 		               public Integer load(Integer id) throws Exception {
 		                  //make the expensive call
 		                  return id;
+		            	   
 		               } 
 		            });
 		
 		loadingCacheSizeBenchmark(loadingCache);
 		
+		System.out.println("loadingCache = ");
+		for(int i=0; i<loadingCache.size(); i++) {
+			System.out.println(loadingCache.getUnchecked(i));
+			
+		}
 		
 	}
 	
