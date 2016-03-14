@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
+import com.google.common.collect.Table;
 
 public class MemoryBenchmark {
 	public static long SIZE = 10000;
@@ -40,6 +42,9 @@ public class MemoryBenchmark {
 		
 		BiMap<Integer, Integer> biMap = HashBiMap.create();
 		biMapSizeBenchmark(biMap);
+		
+		Table<Integer, Integer, Integer> table = HashBasedTable.create();
+		tableSizeBenchmark(table);
 		
 	}
 	
@@ -123,6 +128,26 @@ public class MemoryBenchmark {
 		
 		for(int i = 0; i < SIZE; i++) {
 			biMap.put(i,i);
+		}
+		
+		freeAfter = Runtime.getRuntime().freeMemory();
+		System.out.println("Used mem: " + (free - freeAfter));		
+	}
+
+	private static void tableSizeBenchmark(Table<Integer, Integer, Integer> biMap) {
+		new MemoryBenchmark();
+		
+		int columns = 100;
+		int rows = (int) SIZE / 100;
+		
+		System.out.println("\nlistSizeBenchmark() -> " + biMap.getClass().getSimpleName());
+		long free = Runtime.getRuntime().freeMemory();
+		long freeAfter;
+		
+		for(int i = 0; i < rows; i++) {
+			for(int j = 0; i < columns; j++) {
+				biMap.put(i, j, i*j);
+			}	
 		}
 		
 		freeAfter = Runtime.getRuntime().freeMemory();
