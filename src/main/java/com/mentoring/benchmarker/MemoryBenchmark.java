@@ -14,6 +14,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Table;
+import com.google.common.util.concurrent.AtomicLongMap;
 
 public class MemoryBenchmark {
 	public static long SIZE = 10000;
@@ -29,30 +30,32 @@ public class MemoryBenchmark {
 //		List<Integer> arrayList = new ArrayList<Integer>();
 //		listSizeBenchmark(arrayList);
 		
-		
-		Map<Integer, Integer> hashMap =  new HashMap<>();
-		hashMapSizeBenchmark(hashMap);
+//		Map<Integer, Integer> hashMap =  new HashMap<>();
+//		hashMapSizeBenchmark(hashMap);
 
-		Multiset<Integer> multiset = HashMultiset.create();
-		multiSetSizeBenchmark(multiset);
+
+//		Multiset<Integer> multiset = HashMultiset.create();
+//		multiSetSizeBenchmark(multiset);
+		
+		AtomicLongMap<Integer> atomicMap = AtomicLongMap.create();
+		atomicMapBenchmark(atomicMap);
 		
 		
-		Multimap<Integer, Integer> multimap = HashMultimap.create();
-		multiMapSizeBenchmark(multimap);
-		
-		BiMap<Integer, Integer> biMap = HashBiMap.create();
-		biMapSizeBenchmark(biMap);
+//		
+//		
+//		Multimap<Integer, Integer> multimap = HashMultimap.create();
+//		multiMapSizeBenchmark(multimap);
+//		
+//		BiMap<Integer, Integer> biMap = HashBiMap.create();
+//		biMapSizeBenchmark(biMap);
 		
 		Table<Integer, Integer, Integer> table = HashBasedTable.create();
 		tableSizeBenchmark(table);
 		
+
+		
 	}
 	
-
-
-
-
-
 	@Override
 	protected void finalize() throws Throwable {
 		System.err.println("gc works...");
@@ -104,6 +107,22 @@ public class MemoryBenchmark {
 		
 	}
 	
+
+	private static void atomicMapBenchmark(AtomicLongMap<Integer> atomicMap) {
+		new MemoryBenchmark();
+		System.out.println("\nlistSizeBenchmark() -> " + atomicMap.getClass().getSimpleName());
+		long free = Runtime.getRuntime().freeMemory();
+		long freeAfter;
+		
+		for(int i = 0; i < SIZE; i++) {
+			atomicMap.put(i, i);
+		}
+		
+		freeAfter = Runtime.getRuntime().freeMemory();
+		System.out.println("Used mem: " + (free - freeAfter));
+		
+	}
+	
 	private static void multiMapSizeBenchmark(Multimap<Integer, Integer> multimap) {
 		new MemoryBenchmark();
 		System.out.println("\nlistSizeBenchmark() -> " + multimap.getClass().getSimpleName());
@@ -145,7 +164,7 @@ public class MemoryBenchmark {
 		long freeAfter;
 		
 		for(int i = 0; i < rows; i++) {
-			for(int j = 0; i < columns; j++) {
+			for(int j = 0; j < columns; j++) {
 				biMap.put(i, j, i*j);
 			}	
 		}
