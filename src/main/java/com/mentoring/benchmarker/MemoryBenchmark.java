@@ -29,11 +29,12 @@ import com.google.common.collect.Table;
 import com.google.common.util.concurrent.AtomicLongMap;
 
 public class MemoryBenchmark {
-	public static long SIZE = 100000;
+	public static long SIZE = 10000;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("List memory benchmarking:");
 		System.out.println("Capacity: " + SIZE);
+		//System.gc();
 		
 
 //		
@@ -46,11 +47,11 @@ public class MemoryBenchmark {
 //		System.out.println(foo);
 		
 		
-		List<Integer> arrayList = new ArrayList<Integer>();
-		listSizeBenchmark(arrayList);
+//		List<Integer> arrayList = new ArrayList<Integer>();
+//		listSizeBenchmark(arrayList);
 		
-//		List<Integer> linkedList = new LinkedList<Integer>();
-//		listSizeBenchmark(linkedList);
+		List<Integer> linkedList = new LinkedList<Integer>();
+		listSizeBenchmark(linkedList);
 		
 
 		
@@ -67,8 +68,11 @@ public class MemoryBenchmark {
 //		hashMapSizeBenchmark(synchMap);
 		
 		
-//		Map<Integer, Integer> hashMap =  new HashMap<>();
-//		hashMapSizeBenchmark(hashMap);
+		Map<Integer, Integer> hashMap =  new HashMap<>();
+		hashMapSizeBenchmark(hashMap);
+		
+		hashMapGetBenchmark(hashMap);
+		
 
 //		Map<Integer, Integer> concurrentHashMap =  new  ConcurrentHashMap<>();
 //		hashMapSizeBenchmark(concurrentHashMap);
@@ -154,6 +158,7 @@ public class MemoryBenchmark {
 		for(int i = 0; i < SIZE; i++) {
 			list.add(i);
 		}
+		
 		stopwatch.stop();
 		
 		freeAfter = Runtime.getRuntime().freeMemory();
@@ -180,6 +185,9 @@ public class MemoryBenchmark {
 		System.out.println("Used mem: " + (free - freeAfter));
 		
 	}
+	
+	
+	
 	
 	public static void multiSetSizeBenchmark(Multiset<Integer> multiset) {
 		new MemoryBenchmark();
@@ -301,5 +309,25 @@ public class MemoryBenchmark {
 		
 		freeAfter = Runtime.getRuntime().freeMemory();
 		System.out.println("Used mem: " + (free - freeAfter));		
+		
 	}	
+	
+	////////////////////////////////////////////////////////////////////
+	public static void hashMapGetBenchmark(Map<Integer, Integer> map) {
+		new MemoryBenchmark();
+		System.out.println("\nMapGetBenchmark() -> " + map.getClass().getSimpleName());
+		Integer value = null;
+		
+		Stopwatch stopwatch = Stopwatch.createStarted();
+		for(int i = 0; i < SIZE; i++) {
+			value = map.get(i);
+		}
+		long nanos = stopwatch.elapsed(TimeUnit.NANOSECONDS);
+		
+		System.out.println("value = " + value);
+		System.out.println("Nanos: " + nanos + " /" + stopwatch + "/");
+		
+	}
+
+	
 }
