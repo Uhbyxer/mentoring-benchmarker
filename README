@@ -1,0 +1,7 @@
+
+Build it from source:
+  $ mvn clean package
+
+Run it:
+  $ java -jar target/benchmark.jar
+
