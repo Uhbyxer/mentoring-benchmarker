@@ -49,7 +49,7 @@ public class CustomCache<K, V> extends LinkedHashMap<K, V> {
 		
 		//*************************************************
 		
-		List<Integer> holder = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+		final List<Integer> holder = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
 		
 		LoadingCache<Integer, Integer> loadingCache = 
 		         CacheBuilder.newBuilder()
