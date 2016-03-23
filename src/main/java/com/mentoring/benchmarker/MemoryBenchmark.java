@@ -29,7 +29,7 @@ import com.google.common.collect.Table;
 import com.google.common.util.concurrent.AtomicLongMap;
 
 public class MemoryBenchmark {
-	public static long SIZE = 10000;
+	public static long SIZE = 1000;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("List memory benchmarking:");
@@ -38,13 +38,13 @@ public class MemoryBenchmark {
 		
 
 //		
-		
-//		long foo = 0;
+//		
+//		double foo = 0;
 //		for(int i=0; i<100000; i++) {
-//			foo +=i;
+//			foo +=Math.random();
 //		}
 //		
-//		System.out.println(foo);
+		
 		
 		
 //		List<Integer> arrayList = new ArrayList<Integer>();
@@ -53,7 +53,7 @@ public class MemoryBenchmark {
 		List<Integer> linkedList = new LinkedList<Integer>();
 		listSizeBenchmark(linkedList);
 		
-
+		//System.out.println(foo);
 		
 
 
@@ -68,10 +68,10 @@ public class MemoryBenchmark {
 //		hashMapSizeBenchmark(synchMap);
 		
 		
-		Map<Integer, Integer> hashMap =  new HashMap<>();
-		hashMapSizeBenchmark(hashMap);
-		
-		hashMapGetBenchmark(hashMap);
+//		Map<Integer, Integer> hashMap =  new HashMap<>();
+//		hashMapSizeBenchmark(hashMap);
+//		
+//		hashMapGetBenchmark(hashMap);
 		
 
 //		Map<Integer, Integer> concurrentHashMap =  new  ConcurrentHashMap<>();
