@@ -8,10 +8,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -37,20 +39,70 @@ import org.openjdk.jmh.util.Utils;
 @State(Scope.Thread)
 public class CollectionBenchmark {
 	
-    @Benchmark
-    public long listSizeBenchmark() {
-    	
-    	List<Integer> linkedList = new LinkedList<Integer>();
-		for(int i = 0; i < 1000; i++) {
-			linkedList.add(i);
+	private List<Integer> linkedList;
+	private List<Integer> arrayList;
+	
+	private List<Integer> linkedList10;
+	private List<Integer> arrayList10;
+	
+	
+	private int randInt;
+	
+	public CollectionBenchmark() {
+		linkedList = new LinkedList<Integer>();
+		arrayList = new ArrayList<Integer>();
+		
+		linkedList10 = new LinkedList<Integer>();
+		arrayList10 = new ArrayList<Integer>();
+		
+		Random random = new Random();
+		
+		for (int i = 0; i < 10; i++) {
+			int number = random.nextInt(100);
+			
+			linkedList10.add(number);
+			arrayList10.add(number);
 		}
-    	
-		return linkedList.get(5);
+		
+		
+		randInt = random.nextInt(10);
+				
+	}
+	
+	
 
+	
+    @Benchmark 
+    public void linkedListAddFirst() {
+    	
+    	linkedList.add(randInt);
+    	//return ;
     }
+    
+    @Benchmark
+    public void arrayListAddFirst() {
+    	arrayList.add(randInt);
+    	//return ;
+    }
+    
+    @Benchmark 
+    public void linkedListAdd11() { 		
+    	linkedList10.add(randInt);
+    	//return ;
+    }
+    
+    @Benchmark
+    public void arrayListAdd11() {
+    	arrayList10.add(randInt);
+    	//return ;
+    }
+
 	
 	
     public static void main(String[] args) throws RunnerException, InterruptedException {
+    	
+    	
+    	
         PrintWriter pw = new PrintWriter(System.out, true);
 
         pw.println("---- 8< (cut here) -----------------------------------------");
@@ -64,13 +116,13 @@ public class CollectionBenchmark {
         System.out.println("cpus: " + cpus);
         
 
-        runWith(pw, 1,          "-client");
-        runWith(pw, cpus / 2,   "-client");
-        runWith(pw, cpus,       "-client");
+        //runWith(pw, 1,          "-client");
+        //runWith(pw, cpus / 2,   "-client");
+        //runWith(pw, cpus,       "-client");
 
         runWith(pw, 1,          "-server");
         runWith(pw, cpus / 2,   "-server");
-        runWith(pw, cpus,       "-server");
+        //runWith(pw, cpus,       "-server");
 
         pw.println();
         pw.println("---- 8< (cut here) -----------------------------------------");
